@@ -286,7 +286,7 @@ firebase = pyrebase.initialize_app(config)
 import google.auth
 from google.oauth2 import service_account
 import firebase_admin  # ✅ 加入這一行
-
+from firebase_admin import credentials  # ✅ 你目前缺少這一行
 
 
 import json
