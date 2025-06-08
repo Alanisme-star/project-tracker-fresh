@@ -274,11 +274,13 @@ def upload_step_icons():
     return render_template("upload_step_icons.html")
 
 
-# 載入 Firebase 設定
-with open("firebase_config.json") as f:
-    config = json.load(f)
+firebase_config_json = os.environ.get("FIREBASE_CONFIG")
+if not firebase_config_json:
+    raise ValueError("FIREBASE_CONFIG 環境變數未設定")
 
+config = json.loads(firebase_config_json)
 firebase = pyrebase.initialize_app(config)
+
 
 # Firestore 初始化
 import google.auth
