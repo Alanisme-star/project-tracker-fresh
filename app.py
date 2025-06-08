@@ -285,14 +285,20 @@ import google.auth
 from google.oauth2 import service_account
 import firebase_admin  # ✅ 加入這一行
 
-firebase_cred_json = os.environ.get("FIREBASE_CREDENTIAL_JSON")
+
+
+import json
+import os
+
+firebase_cred_json = os.environ.get("FIREBASE_CREDENTIALS")
 if not firebase_cred_json:
-    raise ValueError("FIREBASE_CREDENTIAL_JSON 環境變數未設定")
+    raise ValueError("FIREBASE_CREDENTIALS 環境變數未設定")
 
 if not firebase_admin._apps:
-    cred = service_account.Credentials.from_service_account_info(json.loads(firebase_cred_json))
+    cred = credentials.Certificate(json.loads(firebase_cred_json))
     firebase_admin.initialize_app(cred)
 db = firestore.client()
+
 
 
 
