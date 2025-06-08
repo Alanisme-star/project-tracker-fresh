@@ -2,6 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from google.cloud import firestore
+from flask_cors import CORS
 
 from flask import Flask, render_template, request, redirect, session
 import pyrebase
@@ -274,18 +275,18 @@ firebase = pyrebase.initialize_app(config)
 # Firestore 初始化
 import google.auth
 from google.oauth2 import service_account
-import firebase_admin  # ✅ 加入這一行
-from firebase_admin import credentials  # ✅ 你目前缺少這一行
+
+
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 firebase_cred_json = os.environ.get("FIREBASE_CREDENTIALS")
 if not firebase_cred_json:
     raise ValueError("FIREBASE_CREDENTIALS 環境變數未設定")
 
-if not firebase_admin._apps:
-    cred = credentials.Certificate(json.loads(firebase_cred_json))
-    firebase_admin.initialize_app(cred)
-
-db = firestore.Client(credentials=cred, project=cred.project_id)
+cred = credentials.Certificate(json.loads(firebase_cred_json))
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 
 
@@ -310,7 +311,7 @@ def login():
         print(f"✅ 找到使用者資料: {user_data}")
 
     if not user_data:
-        print("❌ 查無此帳號")
+        app.logger.warning("❌ 查無此帳號: %s", phone)
         return render_template("login.html", error="登入失敗，請確認手機號碼與密碼")
 
     if user_data.get("password") != password:
