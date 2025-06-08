@@ -299,7 +299,7 @@ if not firebase_cred_json:
 if not firebase_admin._apps:
     cred = credentials.Certificate(json.loads(firebase_cred_json))
     firebase_admin.initialize_app(cred)
-db = firestore.client()
+db = firestore.Client()
 
 
 
