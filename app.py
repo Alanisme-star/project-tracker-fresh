@@ -7,8 +7,9 @@ from flask import Flask, render_template, request, redirect, session
 import pyrebase
 import json
 
+# Flask 初始化
 app = Flask(__name__)
-app.secret_key = "super-secret-key"  # 可以隨便寫一個字串
+CORS(app)
 
 # 加在 app 最上方（若還沒加）
 ICON_FOLDER = os.path.join("static", "icons")
@@ -48,18 +49,6 @@ def calculate_working_days(start_date, end_date):
 def manage_fixed_steps(project_id):
     if "user" not in session or session.get("role") != "staff":
         return redirect("/")
-
-    FIXED_STEPS = [
-        {"step_number": 1, "name": "線上諮詢時間"},
-        {"step_number": 2, "name": "顧客建檔"},
-        {"step_number": 3, "name": "確認場勘時間"},
-        {"step_number": 4, "name": "場勘"},
-        {"step_number": 5, "name": "報價與規劃"},
-        {"step_number": 6, "name": "訂單取得與確認施工日期"},
-        {"step_number": 7, "name": "竣工"},
-        {"step_number": 8, "name": "付款及發票"},
-        {"step_number": 9, "name": "結案及保固起算"}
-    ]
 
     project_ref = db.collection("projects").document(project_id)
     project_data = project_ref.get().to_dict()
@@ -288,10 +277,6 @@ from google.oauth2 import service_account
 import firebase_admin  # ✅ 加入這一行
 from firebase_admin import credentials  # ✅ 你目前缺少這一行
 
-
-import json
-import os
-
 firebase_cred_json = os.environ.get("FIREBASE_CREDENTIALS")
 if not firebase_cred_json:
     raise ValueError("FIREBASE_CREDENTIALS 環境變數未設定")
@@ -299,17 +284,6 @@ if not firebase_cred_json:
 if not firebase_admin._apps:
     cred = credentials.Certificate(json.loads(firebase_cred_json))
     firebase_admin.initialize_app(cred)
-
-
-
-from google.cloud import firestore
-
-firebase_cred_json = os.environ.get("FIREBASE_CREDENTIALS")
-if not firebase_cred_json:
-    raise ValueError("FIREBASE_CREDENTIALS 環境變數未設定")
-
-cred = credentials.Certificate(json.loads(firebase_cred_json))
-firebase_admin.initialize_app(cred)
 
 db = firestore.Client(credentials=cred, project=cred.project_id)
 
