@@ -544,13 +544,11 @@ def project_detail(project_id):
     project_ref = db.collection("projects").document(project_id)
     project = project_ref.get().to_dict()
 
-    # 取得固定步驟（只顯示已啟用的）
+    # 取得固定步驟（全部顯示，不篩選 completed_at）
     step_docs = project_ref.collection("steps").order_by("step_number").stream()
     steps = []
     for doc in step_docs:
         data = doc.to_dict()
-        if not data.get("completed_at"):  # 改成只忽略沒完成的
-            continue
         steps.append({
             "step_number": data["step_number"],
             "name": data["name"],
