@@ -1,0 +1,7 @@
+__pycache__/
+firebase_config.json
+.env
+*.pyc
+.DS_Store
+*.sqlite3
+*.log
