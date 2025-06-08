@@ -299,7 +299,19 @@ if not firebase_cred_json:
 if not firebase_admin._apps:
     cred = credentials.Certificate(json.loads(firebase_cred_json))
     firebase_admin.initialize_app(cred)
-db = firestore.Client()
+
+
+
+from google.cloud import firestore
+
+firebase_cred_json = os.environ.get("FIREBASE_CREDENTIALS")
+if not firebase_cred_json:
+    raise ValueError("FIREBASE_CREDENTIALS 環境變數未設定")
+
+cred = credentials.Certificate(json.loads(firebase_cred_json))
+firebase_admin.initialize_app(cred)
+
+db = firestore.Client(credentials=cred, project=cred.project_id)
 
 
 
