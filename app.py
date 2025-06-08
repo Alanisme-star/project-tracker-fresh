@@ -12,6 +12,9 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+# ✅ 這行是關鍵，處理 session 所需
+app.secret_key = os.environ.get("SECRET_KEY", "default-secret-key")
+
 # 加在 app 最上方（若還沒加）
 ICON_FOLDER = os.path.join("static", "icons")
 os.makedirs(ICON_FOLDER, exist_ok=True)
